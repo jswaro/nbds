@@ -17,20 +17,30 @@
 #else//!__ELF__
 
 #include <pthread.h>
+#include <assert.h>
+#include <stdio.h>
+
+#define __ASSERT(error, val) \
+	do { \
+		if (!(val)) { \
+			fprintf(stderr, error); \
+			assert(val); \
+		} \
+	} while (0)
 
 #define DECLARE_THREAD_LOCAL(name, type) pthread_key_t name##_KEY
 
 #define INIT_THREAD_LOCAL(name) \
     do { \
         if (pthread_key_create(&name##_KEY, NULL) != 0) { \
-            assert("error initializing thread local variable " #name, FALSE); \
+            __ASSERT("error initializing thread local variable " #name, FALSE); \
         } \
     } while (0)
 
 #define SET_THREAD_LOCAL(name, value) \
     do { \
         name = value; \
-        pthread_setspecific(name##_KEY, (void *)(size_t)value); \
+        pthread_setspecific(name##_KEY, (void *)(size_t)(value)); \
     } while (0);
 
 #define LOCALIZE_THREAD_LOCAL(name, type) type name = (type)(size_t)pthread_getspecific(name##_KEY)

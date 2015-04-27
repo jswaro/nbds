@@ -11,7 +11,6 @@
 #include "tls.h"
 
 DECLARE_THREAD_LOCAL(ThreadId, int);
-static int ThreadIndex
 
 static int MaxThreadId = 0;
 

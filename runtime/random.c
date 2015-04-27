@@ -23,6 +23,11 @@ void rnd_init (void) {
 // TODO: put a lock around this so that multiple threads being initialize concurrently don't read
 //       the same values from /dev/urandom
 void rnd_thread_init (void) {
+	LOCALIZE_THREAD_LOCAL(rx_, unsigned);
+	LOCALIZE_THREAD_LOCAL(ry_, unsigned);
+	LOCALIZE_THREAD_LOCAL(rz_, unsigned);
+	LOCALIZE_THREAD_LOCAL(rc_, unsigned);
+
     int fd = open("/dev/urandom", O_RDONLY);
     if (fd == -1) {
         perror("Error opening /dev/urandom");
